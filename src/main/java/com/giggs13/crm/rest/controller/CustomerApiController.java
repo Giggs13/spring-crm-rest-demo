@@ -2,8 +2,8 @@ package com.giggs13.crm.rest.controller;
 
 import com.giggs13.crm.rest.entity.CreatedResourceIdResponse;
 import com.giggs13.crm.rest.entity.Customer;
-import com.giggs13.crm.rest.error.CustomerNotFoundException;
 import com.giggs13.crm.rest.service.CustomerService;
+import com.giggs13.crm.rest.util.RestPreconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,11 +29,7 @@ public class CustomerApiController {
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Customer getById(@PathVariable int id) {
-        Customer customer = customerService.getCustomer(id);
-        if (customer == null) {
-            throw new CustomerNotFoundException(id);
-        }
-        return customer;
+        return RestPreconditions.checkFound(customerService.getCustomer(id), "Customer not found by id " + id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -54,6 +50,7 @@ public class CustomerApiController {
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable int id) {
+        RestPreconditions.checkFound(customerService.getCustomer(id), "Customer not found by id " + id);
         customerService.delete(id);
     }
 }
