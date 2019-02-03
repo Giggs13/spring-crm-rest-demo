@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class CustomerApiExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<CustomerErrorResponse> handleCustomerNotFoundException(CustomerNotFoundException ex) {
+    public ResponseEntity<CustomerErrorResponse> handleException(CustomerNotFoundException ex) {
         CustomerErrorResponse response = new CustomerErrorResponse();
         response.setStatus(HttpStatus.NOT_FOUND.value());
         response.setMessage(ex.getMessage());
